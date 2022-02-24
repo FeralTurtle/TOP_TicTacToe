@@ -1,0 +1,86 @@
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background-color: #808080;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 15%;
+}
+
+
+/* Game container */
+
+.grid-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr 7fr 3fr;
+    grid-template-areas:
+        "header header header"
+        "player1-score gameboard player2-score"
+        "footer footer footer";
+}
+
+.game-header {
+    grid-area: header;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+}
+
+.player1-score {
+    grid-area: player1-score;
+    display: grid;
+    grid-template-rows: 1fr 6fr;
+    align-items: center;
+    text-align: center;
+}
+
+.player1-score>span:nth-child(1) {
+    font-size: 2rem;
+}
+
+
+.player1-score>span:nth-child(2) {
+    font-size: 4rem;
+}
+
+.player2-score {
+    grid-area: player2-score;
+    display: grid;
+    grid-template-rows: 1fr 6fr;
+    align-items: center;
+    text-align: center;
+}
+
+.player2-score>span:nth-child(1) {
+    font-size: 2rem;
+}
+
+
+.player2-score>span:nth-child(2) {
+    font-size: 4rem;
+}
+
+.gameboard {
+    grid-area: gameboard;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 12px;
+    padding: 11px 42px;
+}
+
+.gameboard-tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
