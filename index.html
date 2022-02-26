@@ -9,22 +9,24 @@
 </head>
 <body>
     <h1>Tic Tac Toe</h1>
-    <div class="grid-container">
+    <div class="game-container">
         <div class="game-header">
-            Header
+            <span>Enter player name:</span>
+            <input type="text" class="player-info-input" autocomplete="off">
+            <button class="submit-btn">Submit</button>
         </div>
-        <div class="player1-score">
+        <div class="player1-info" id="current-player">
             <span>Player 1</span>
             <span>0</span>
         </div>
-        <div class="player2-score">
+        <div class="player2-info">
             <span>Player 2</span>
             <span>0</span>
         </div>
         <div class="gameboard"></div>
+        <button class="start-button" autocomplete="off" disabled>Start game</button>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-

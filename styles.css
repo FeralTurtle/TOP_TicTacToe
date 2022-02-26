@@ -1,3 +1,7 @@
+:root {
+    --highlight-color: rgba(255, 255, 255, 0.65);
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -17,15 +21,15 @@ h1 {
 
 /* Game container */
 
-.grid-container {
+.game-container {
     flex: 1;
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     grid-template-rows: 1fr 7fr 3fr;
     grid-template-areas:
         "header header header"
-        "player1-score gameboard player2-score"
-        "footer footer footer";
+        "player1-info gameboard player2-info"
+        ". button .";
 }
 
 .game-header {
@@ -36,37 +40,37 @@ h1 {
     font-size: 2rem;
 }
 
-.player1-score {
-    grid-area: player1-score;
+.player1-info {
+    grid-area: player1-info;
     display: grid;
     grid-template-rows: 1fr 6fr;
     align-items: center;
     text-align: center;
 }
 
-.player1-score>span:nth-child(1) {
+.player1-info>span:nth-child(1) {
     font-size: 2rem;
 }
 
 
-.player1-score>span:nth-child(2) {
+.player1-info>span:nth-child(2) {
     font-size: 4rem;
 }
 
-.player2-score {
-    grid-area: player2-score;
+.player2-info {
+    grid-area: player2-info;
     display: grid;
     grid-template-rows: 1fr 6fr;
     align-items: center;
     text-align: center;
 }
 
-.player2-score>span:nth-child(1) {
+.player2-info>span:nth-child(1) {
     font-size: 2rem;
 }
 
 
-.player2-score>span:nth-child(2) {
+.player2-info>span:nth-child(2) {
     font-size: 4rem;
 }
 
@@ -83,4 +87,15 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.start-button {
+    grid-area: button;
+    align-self: center;
+    justify-self: center;
+    height: 25%;
+    width: 25%;
+    background-color: lightgreen;
+    border-radius: 9px;
+    border-color: gray;
 }
