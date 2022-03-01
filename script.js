@@ -37,58 +37,92 @@ const InitializePlayers = (() => {
     return { player1, player2 };
 })();
 
-//Makes gameboard
 const Gameboard = (() => {
+    const gameboard = document.querySelector('.gameboard');
+    const markers = ['X', '', 'O',
+        '', 'X', '',
+        '', '', 'X'];
+    markers.forEach(marker => {
+        const newTile = document.createElement('span');
+        newTile.classList.add('gameboard-tile');
+        newTile.textContent = marker;
+        gameboard.append(newTile);
+    });
+    return { markers };
+})();
+
+//Add board functionality and check for win/tie
+const GameMode = (() => {
     const player1 = InitializePlayers.player1;
     const player2 = InitializePlayers.player2;
     const player1Div = document.querySelector('.player1-info');
     const player2Div = document.querySelector('.player2-info');
+    const startButton = document.querySelector('.start-button');
+    const markers = Gameboard.markers;
     let currentPlayer = player1;
-    const gameboard = document.querySelector('.gameboard');
-    const markers = ['X', 'O', 'X',
-        'X', 'O', 'X',
-        'X', 'O', 'X'];
+    let player1Name = document.querySelector('.player1-info>span:nth-child(1)');
+    let player2Name = document.querySelector('.player2-info>span:nth-child(1)');
     const toggleCurrentPlayer = () => {
         player1Div.classList.toggle('current-player');
         player2Div.classList.toggle('current-player');
-        let currentPlayerName = document.querySelector('.current-player>span:nth-child(1)');
-        currentPlayerName.style.backgroundColor = 'rgba(255, 255, 255, 0.65)';
     };
-    const makeBoard = () => markers.forEach(marker => {
-        const newTile = document.createElement('span');
-        let currentPlayerName = document.querySelector('.current-player>span:nth-child(1)');
-        currentPlayerName.style.backgroundColor = 'rgba(255, 255, 255, 0.65)';
-        newTile.classList.add('gameboard-tile');
-        newTile.textContent = marker;
-        newTile.addEventListener('click', () => {
-            newTile.textContent = currentPlayer.marker;
+    const addBoardEventListener = () => {
+        const gameboardTiles = document.querySelectorAll('.gameboard-tile');
+        gameboardTiles.forEach(tile => tile.addEventListener('click', () => {
+            if (tile.textContent != '') {
+                console.log('not null, no marker allowed');
+                return;
+            }
             if (currentPlayer == player1) {
-                currentPlayerName.style.backgroundColor = null;
+                tile.textContent = currentPlayer.marker;
                 currentPlayer = player2;
+                player1Name.style.backgroundColor = null;
+                player2Name.style.backgroundColor = 'rgba(255, 255, 255, 0.65)';
                 toggleCurrentPlayer();
             } else if (currentPlayer == player2) {
-                let player2Name = document.querySelector('.player2-info>span:nth-child(1)');
-                player2Name.style.backgroundColor = null;
-                // currentPlayerName.style.backgroundColor = null;//still points to player 1 instead of player2, despite being player2 in the html. Removes p1 instead of p2.
+                tile.textContent = currentPlayer.marker;
                 currentPlayer = player1;
+                player2Name.style.backgroundColor = null;
+                player1Name.style.backgroundColor = 'rgba(255, 255, 255, 0.65)';
                 toggleCurrentPlayer();
             }
-        });
-        gameboard.append(newTile);
-    });
-    return { makeBoard };
-})();
+        }));
+    }
 
-const GameMode = (() => {
-    const player1Div = document.querySelector('.player1-info');
-    const player2Div = document.querySelector('.player2-info');
-    const startButton = document.querySelector('.start-button');
-    const { makeBoard } = Gameboard;
+    const gameboard = document.querySelector('.gameboard');
+    const boardScan = [];
+    const winCheck = [];
+    const tiles = gameboard.children;
+    Array.from(tiles).forEach(tile => {
+        boardScan.push(tile.textContent);
+    });
+    // console.log(boardScan);
+    const marker = currentPlayer.marker;
+    let index = boardScan.indexOf(marker);
+    while (index != -1) { // while there is a marker (marker of current player) to get an index from
+        winCheck.push(index);
+        index = boardScan.indexOf(marker, index + 1); // breaks infinite loop
+    }
+    // console.log(winCheck);
+    // console.log(winCheck.toString());
+    const winIndices = ['0,1,2', '3,4,5', '6,7,8', '0,3,6', '1,4,7', '2,5,8'];
+    const tieIndices = ['0,4,8', '2,4,6'];
+    let win = false;
+    let tie = false;
+    if (winIndices.indexOf(winCheck.toString()) != -1) { //is winCheck's value inside winIndices array
+        win = true;
+        console.log('win!');
+    } else if (tieIndices.indexOf(winCheck.toString()) != -1) {
+        tie = true;
+        console.log('tie!');
+    }
 
     //Start button
     startButton.addEventListener('click', () => {
         player1Div.classList.add('current-player');
+        let player1Name = document.querySelector('.player1-info>span:nth-child(1)');
+        player1Name.style.backgroundColor = 'rgba(255, 255, 255, 0.65)';
         startButton.remove();
-        makeBoard();
+        addBoardEventListener();
     });
 })();
