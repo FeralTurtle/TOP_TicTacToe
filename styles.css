@@ -79,7 +79,6 @@ h1 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 12px;
     padding: 11px 42px;
 }
 
@@ -87,6 +86,7 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 2px solid black;
 }
 
 .start-button {
@@ -96,6 +96,17 @@ h1 {
     height: 25%;
     width: 25%;
     background-color: lightgreen;
+    border-radius: 9px;
+    border-color: gray;
+}
+
+.reset-button {
+    grid-area: button;
+    align-self: center;
+    justify-self: center;
+    height: 25%;
+    width: 25%;
+    background-color: orange;
     border-radius: 9px;
     border-color: gray;
 }

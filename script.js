@@ -39,9 +39,9 @@ const InitializePlayers = (() => {
 
 const Gameboard = (() => {
     const gameboard = document.querySelector('.gameboard');
-    const markers = ['X', '', 'O',
-        '', 'X', '',
-        '', '', 'X'];
+    const markers = ['', '', '',
+        '', '', '',
+        '', '', ''];
     markers.forEach(marker => {
         const newTile = document.createElement('span');
         newTile.classList.add('gameboard-tile');
@@ -57,6 +57,7 @@ const GameMode = (() => {
     const player2 = InitializePlayers.player2;
     const player1Div = document.querySelector('.player1-info');
     const player2Div = document.querySelector('.player2-info');
+    const gameHeader = document.querySelector('.game-header');
     const startButton = document.querySelector('.start-button');
     const markers = Gameboard.markers;
     let currentPlayer = player1;
@@ -75,12 +76,14 @@ const GameMode = (() => {
             }
             if (currentPlayer == player1) {
                 tile.textContent = currentPlayer.marker;
+                checkForWin();
                 currentPlayer = player2;
                 player1Name.style.backgroundColor = null;
                 player2Name.style.backgroundColor = 'rgba(255, 255, 255, 0.65)';
                 toggleCurrentPlayer();
             } else if (currentPlayer == player2) {
                 tile.textContent = currentPlayer.marker;
+                checkForWin();
                 currentPlayer = player1;
                 player2Name.style.backgroundColor = null;
                 player1Name.style.backgroundColor = 'rgba(255, 255, 255, 0.65)';
@@ -88,34 +91,24 @@ const GameMode = (() => {
             }
         }));
     }
-
-    const gameboard = document.querySelector('.gameboard');
-    const boardScan = [];
-    const winCheck = [];
-    const tiles = gameboard.children;
-    Array.from(tiles).forEach(tile => {
-        boardScan.push(tile.textContent);
-    });
-    // console.log(boardScan);
-    const marker = currentPlayer.marker;
-    let index = boardScan.indexOf(marker);
-    while (index != -1) { // while there is a marker (marker of current player) to get an index from
-        winCheck.push(index);
-        index = boardScan.indexOf(marker, index + 1); // breaks infinite loop
-    }
-    // console.log(winCheck);
-    // console.log(winCheck.toString());
-    const winIndices = ['0,1,2', '3,4,5', '6,7,8', '0,3,6', '1,4,7', '2,5,8'];
-    const tieIndices = ['0,4,8', '2,4,6'];
-    let win = false;
-    let tie = false;
-    if (winIndices.indexOf(winCheck.toString()) != -1) { //is winCheck's value inside winIndices array
-        win = true;
-        console.log('win!');
-    } else if (tieIndices.indexOf(winCheck.toString()) != -1) {
-        tie = true;
-        console.log('tie!');
-    }
+    const addResetButton = () => {
+        const gameboardTiles = document.querySelectorAll('.gameboard-tile');
+        const gameContainer = document.querySelector('.game-container');
+        const gameHeader = document.querySelector('.game-header');
+        const resetButton = document.createElement('button');
+        let player1Name = document.querySelector('.player1-info>span:nth-child(1)');
+        let player2Name = document.querySelector('.player2-info>span:nth-child(1)');
+        resetButton.textContent = 'Reset game';
+        resetButton.classList.add('reset-button');
+        resetButton.addEventListener('click', () => {
+            gameHeader.textContent = null;
+            player1Name.style.backgroundColor = null;
+            player2Name.style.backgroundColor = null;
+            gameboardTiles.forEach(tile => tile.textContent = null);
+            resetButton.remove(resetButton);
+        });
+        gameContainer.append(resetButton);
+    };
 
     //Start button
     startButton.addEventListener('click', () => {
@@ -125,4 +118,45 @@ const GameMode = (() => {
         startButton.remove();
         addBoardEventListener();
     });
+
+    function checkForWin() {
+        //Check board
+        const gameboard = document.querySelector('.gameboard');
+        const boardScan = [];
+        const winCheck = [];
+        let filledTiles = 0;
+        //Fills boardScan[] with all placed markers
+        const tiles = gameboard.children;
+        Array.from(tiles).forEach(tile => {
+            boardScan.push(tile.textContent);
+            if (tile.textContent != '') {
+                filledTiles++;
+            };
+        });
+        //Fills winCheck[] with current player's marker's indices
+        const playerMarker = currentPlayer.marker;
+        let playerMarkerIndex = boardScan.indexOf(playerMarker);
+        while (playerMarkerIndex != -1) { // while there is a marker (marker of current player) to get an index from
+            winCheck.push(playerMarkerIndex);
+            playerMarkerIndex = boardScan.indexOf(playerMarker, playerMarkerIndex + 1); // breaks infinite loop
+        };
+
+        //Check win or tie
+        const winIndices = ['0,1,2', '3,4,5', '6,7,8', '0,3,6', '1,4,7', '2,5,8', '0,4,8', '2,4,6'];
+        let win = false;
+        let tie = false;
+        if (winIndices.indexOf(winCheck.toString()) != -1) { //is winCheck's value inside winIndices array
+            win = true;
+            console.log(winCheck.toString());
+            gameHeader.textContent = `${currentPlayer.name} wins!`;
+            let currentPlayerScore = document.querySelector('.current-player>span:nth-child(2)');
+            currentPlayerScore.textContent++;
+            addResetButton();
+        } else if (filledTiles == 9) {
+            tie = true;
+            console.log(winCheck.toString());
+            gameHeader.textContent = `Tie game!`;
+            addResetButton();
+        };
+    };
 })();
