@@ -1,6 +1,8 @@
-const Player = (name, marker) => {
-    let isCurrentPlayer;
-    return { name, marker, isCurrentPlayer };
+class Player {
+    constructor(name, marker) {
+        this.name = name;
+        this.marker = marker;
+    }
 }
 
 //Get input to assign players, then unlocks start button
@@ -12,8 +14,8 @@ const InitializePlayers = (() => {
     const player1name = document.querySelector('.player1-info>span:nth-child(1)');
     const player2name = document.querySelector('.player2-info>span:nth-child(1)');
     let submitInfoCount = 0;
-    const player1 = Player('', 'X');
-    const player2 = Player('', 'O');
+    const player1 = new Player('', 'X');
+    const player2 = new Player('', 'O');
 
     submitBtn.addEventListener('click', () => {
         switch (submitInfoCount) {
